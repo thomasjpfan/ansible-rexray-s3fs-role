@@ -1,0 +1,6 @@
+---
+
+rexray_s3fs_accesskey: ""
+rexray_s3fs_secretkey: ""
+
+rexray_s3fs_version: "0.11.1"

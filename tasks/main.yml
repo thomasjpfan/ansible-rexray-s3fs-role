@@ -1,0 +1,24 @@
+---
+
+- name: Make sure aws keys are defined
+  fail:
+    msg: "rexray_s3fs_accesskey is not defined"
+  when: item == ""
+  with_items:
+  - "{{ rexray_s3fs_accesskey }}"
+  - "{{ rexray_s3fs_secretkey }}"
+  no_log: true
+
+- name: Get current plugins
+  shell: >-
+    docker plugin ls --format {% raw %}'{{ .Name }}'{% endraw %}
+  register: plugins
+  changed_when: false
+
+- name: Install RexRay s3 plugin
+  shell: >-
+    docker plugin install {{ rexray_s3fs_image }}
+    S3FS_ACCESSKEY={{ rexray_s3fs_accesskey }}
+    S3FS_SECRETKEY={{ rexray_s3fs_secretkey }}
+    --grant-all-permissions
+  when: rexray_s3fs_image not in plugins.stdout_lines
